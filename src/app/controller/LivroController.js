@@ -3,6 +3,8 @@ const { validationResult } = require('express-validator/check');
 const LivroDao = require('../infra/livro-dao');
 const db = require('../../config/database');
 
+const templates = require('../views/templates');
+
 class LivroController {
 
     static rotas(){
@@ -20,7 +22,8 @@ class LivroController {
             const livroDao = new LivroDao(db);
             livroDao.lista()
                     .then(livros => resp.marko(
-                        require('../views/livros/lista/lista.marko'),
+                        templates.livros.lista,
+                        // require('../views/livros/lista/lista.marko'),
                         {
                             livros: livros
                         }
@@ -32,7 +35,8 @@ class LivroController {
     formularioCadastro() {
         return function(req, resp) {
             resp.marko(
-                require('../views/livros/form/form.marko'), 
+                templates.livros.form,
+                // require('../views/livros/form/form.marko'), 
                 { livro: {} }
             );
         };
@@ -46,7 +50,8 @@ class LivroController {
             livroDao.buscaPorId(id)
                     .then(livro => 
                         resp.marko(
-                            require('../views/livros/form/form.marko'), 
+                            templates.livros.form,
+                            // require('../views/livros/form/form.marko'), 
                             { livro: livro }
                         )
                     )
@@ -63,7 +68,8 @@ class LivroController {
 
             if (!erros.isEmpty()) {
                 return resp.marko(
-                    require('../views/livros/form/form.marko'),
+                    templates.livros.form,
+                    // require('../views/livros/form/form.marko'),
                     { 
                         livro: {}, 
                         errosValidacao: erros.array()
@@ -72,7 +78,7 @@ class LivroController {
             }
 
             livroDao.adiciona(req.body)
-                    .then(resp.redirect('/livros'))
+                    .then(resp.redirect(LivroControlador.rotas().lista))
                     .catch(erro => console.log(erro));
         };
     }
@@ -83,7 +89,7 @@ class LivroController {
             const livroDao = new LivroDao(db);
 
             livroDao.atualiza(req.body)
-                    .then(resp.redirect('/livros'))
+                    .then(resp.redirect(LivroControlador.rotas().lista))
                     .catch(erro => console.log(erro));
         };
     }
