@@ -4,7 +4,8 @@ class BaseController {
 
     static rotas(){
         return {
-            home: '/'
+            home: '/',
+            login: '/login' // nova URL de rota adicionada.
         }
     }
 
@@ -15,6 +16,20 @@ class BaseController {
                 // require('../views/base/home/home.marko')
             );
         };
+    }
+
+    login() {
+
+        return function(req, resp) {
+            resp.marko(templates.base.login);
+        };
+    }
+
+    efetuaLogin() {
+
+        return function(req, resp) app.get(rotasBase.home, baseController.home());{
+app.get(rotasBase.home, baseController.home());
+        };app.get(rotasBase.home, baseController.home());
     }
 }
 
