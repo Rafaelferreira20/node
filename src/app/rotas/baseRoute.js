@@ -5,6 +5,6 @@ module.exports = (app) => {
     const rotasBase = BaseController.rotas();
 
     app.route(rotasBase.login)
-        .get(baseControlador.login())
-        .post(baseControlador.efetuaLogin());
+        .get(baseController.login())
+        .post(baseController.efetuaLogin());
 };

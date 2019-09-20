@@ -1,3 +1,4 @@
+const LivroControlador = require('./LivroController');
 const templates = require('../views/templates');
 
 class BaseController {
@@ -5,7 +6,7 @@ class BaseController {
     static rotas(){
         return {
             home: '/',
-            login: '/login' // nova URL de rota adicionada.
+            login: '/login'
         }
     }
 
@@ -13,7 +14,6 @@ class BaseController {
         return function(req, resp) {
             resp.marko(
                 templates.base.home
-                // require('../views/base/home/home.marko')
             );
         };
     }
@@ -27,9 +27,27 @@ class BaseController {
 
     efetuaLogin() {
 
-        return function(req, resp) app.get(rotasBase.home, baseController.home());{
-app.get(rotasBase.home, baseController.home());
-        };app.get(rotasBase.home, baseController.home());
+        return function(req, resp, next) {
+
+            const passport = req.passport;
+            passport.authenticate('local', (erro, usuario, info) => {
+                if (info) {
+                    return resp.marko(templates.base.login);
+                }
+
+                if (erro) {
+                    return next(erro);
+                }
+
+                req.login(usuario, (erro) => {
+                    if (erro) {
+                        return next(erro);
+                    }
+
+                    return resp.redirect(LivroControlador.rotas().lista);
+                });
+            })(req, resp, next);
+        };
     }
 }
 
