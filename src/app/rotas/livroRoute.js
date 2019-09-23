@@ -3,8 +3,19 @@ const livroController = new LivroCrontroller();
 
 const Livro = require('../model/Livro');
 
+const BaseController = require('../controller/BaseController');
+
+
 module.exports = (app) => {
     const rotasLivro = LivroCrontroller.rotas();
+
+    app.use(rotasLivro.autenticadas, function(req, resp, next) {
+        if(req.isAuthenticated()) {
+            next();
+        } else{
+            resp.redirect(BaseController.rotas().login);
+        }
+    });
 
     app.get(rotasLivro.lista, livroController.lista());
 
